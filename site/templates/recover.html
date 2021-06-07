@@ -1,0 +1,54 @@
+{% extends "base.html"%}
+{% block title %}Recover{% endblock %}
+
+{%block content%}
+
+
+<br/><br/><br/><br/>
+<center>
+    <img src={{url_for("static", filename="logo1.png" )}}>
+</center>
+<table class="table table-hover">
+    <thead>
+    <tr>
+        <th scope="col" style="text-align:center;font-size:50px">SpyShnap<br/></th>
+    </tr>
+</table>
+<div class="card border-primary mb-3" style="max-width: 30rem;margin:0 auto; padding-bottom: 0">
+    <div class="card-body">
+        <form action="#" method="post">
+            <fieldset>
+                <legend>Recover account</legend>
+                <div class="form-group">
+                    <label for="exampleInputEmail1">Email</label>
+                    <input type="email" class="form-control" name="email" id="exampleInputEmail1"
+                           aria-describedby="emailHelp" placeholder="Enter email">
+                    <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+                    {%if error%}
+                    <div class="invalid-feedback" style="display:block">{{error}}</div>
+                    {%endif%}
+                </div>
+                <button type="submit" class="btn btn-primary">Recover Password</button>
+                <button type="button" class="btn btn-primary" onclick="document.location='login'" style="float:right">
+                    Cancel
+                </button>
+            </fieldset>
+        </form>
+    </div>
+    {%if success%}
+    <div class="alert alert-dismissible alert-success" id="popUp" style="margin-bottom: 0 ">
+        <button type="button" class="close" data-dismiss="alert" onclick="closePopUp()">&times;</button>
+        <strong>{{success}}</strong>
+    </div>
+    {%endif%}
+</div>
+
+<script>
+    function closePopUp() {
+        var popUp = document.getElementById("popUp");
+        popUp.style.display = "none";
+
+    }
+</script>
+
+{%endblock%}

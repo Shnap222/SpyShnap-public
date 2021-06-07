@@ -1,0 +1,84 @@
+{%extends "base_home.html"%}
+{%block title%}Profile{%endblock%}
+
+
+{%block head%}
+<link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/settingspage.css') }}">
+<script type="text/javascript" src="{{ url_for('static',filename='scripts/settingspage.js') }}"></script>
+{%endblock%}
+
+
+
+{%block content%}
+
+
+
+
+<!--pointer-events: none;-->
+<br/><br/><br/><br/>
+
+
+<div class="Profile" style="margin:auto;max-width: 70rem">
+    <a class="list-group-item list-group-item-action active"
+       style="margin:auto;pointer-events: none;max-width: 70rem; text-align:center;">PROFILE</a>
+
+
+    <div class="card no-space bg-white mb-3" style="margin-bottom: 0 !important">
+        <div class="card-body">
+            <form action="#" id="form" method="post">
+
+                <div class="form-group">
+                    <label for="newEmail">Email</label>
+                    <input type="email" class="form-control profile-input" name="newEmail" id="newEmail"
+                           aria-describedby="emailHelp" placeholder={{email}} onblur="validateEmail()">
+                    {% if email_error%}
+                    <div class="invalid-feedback" id="EmailError" style="display:block;">Email is Invalid</div>
+                    {%else%}
+                    <div class="invalid-feedback" id="EmailError" style="display:none;">Email is Invalid</div>
+                    {%endif%}
+                </div>
+                <hr/>
+                <div class="form-group">
+                    <label for="newPassword">New Password</label>
+                    <input type="password" name="newPass"  minlength="8" required class="form-control" id="newPassword" onblur="checkValid()"
+                           placeholder="New Password"/>
+                    <div class="invalid-feedback" id="errorLength" style="display:none;">The length of the password has to be longer than 8 characters</div>
+                </div>
+                <div class="form-group">
+                    <label for="retypePassword">Retype Password</label>
+                    <input type="password" name="retypePass"  class="form-control" id="retypePassword"
+                           onblur="isIdentical()"
+                           placeholder="Same Password">
+                    <div class="invalid-feedback" id="errorRetype" style="display:none;">The passwords do not match</div>
+                </div>
+                <hr/>
+                <div class="form-group">
+                    <label for="retypePassword">Current Password</label>
+                    <input type="password" name="currentPass" class="form-control" style="display:block;" id="confirm"
+                           placeholder="Current Password" onblur="closeError('passError')">
+                    <button type="button" onclick="confirmChanges()" class="btn btn-secondary right">
+                        Confirm
+                    </button>
+                    <small id="current password help" class="form-text text-muted">*This field is required</small>
+                    {% if password_error%}
+                    <div class="invalid-feedback" id="passError" style="display:block;">Password is incorrect</div>
+                    {%endif%}
+                    <div class="invalid-feedback" id="confirmError" style="display:none;">You forgot to fill this
+                        field
+                    </div>
+
+                </div>
+            </form>
+        </div>
+    </div>
+    {%if saved%}
+    <div class="alert alert-dismissible alert-success" id="popUp">
+        <button type="button" class="close" data-dismiss="alert" onclick="closePopUp()">&times;</button>
+        <strong>Changes were saved!</strong>
+    </div>
+    {%endif%}
+
+</div>
+
+
+{%endblock%}

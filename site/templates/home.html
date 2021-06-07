@@ -1,0 +1,75 @@
+{%extends "base_home.html"%}
+{%block title%}Home{%endblock%}
+
+
+{%block head%}
+<script type="text/javascript" src="{{ url_for('static',filename='scripts/mainpage.js') }}"></script>
+{%endblock%}
+
+{%block content%}
+
+
+<form id=search class="list-group formClosed" method="post">
+    <li class="list-group-item d-flex justify-content-between align-items-center" style="padding-top: 4px !important;
+    padding-bottom: 4px !important;">
+        <input class="form-control form-control-sm right-side in-front search_input inputClosed " id="searchInput"
+               name="search" type="text" placeholder="Search">
+
+        <button type="button" onclick="openSearch()" id="searchButton"
+                class="btn btn-primary btn-sm right-side " style="display:block;"
+                id="searchButton">
+            <img src={{url_for("static", filename="search_icon2.png" )}} class="search_image"/>
+        </button>
+    </li>
+</form>
+<div style="display: flex; justify-content: space-between">
+
+
+    <div style="width: 200px"></div>
+
+    {%if addresses.__len__() == 0 %}
+
+    <div style="margin-top: 30vh">
+        <h4 class="card-title">No Clients</h4>
+            <p class="text-muted">If you want to add clients, press the install client button and install it on your desired computer! </p>
+    </div>
+
+    {%else%}
+
+    <div class="Line" style="width: 70rem; margin:auto;">
+        {% for ip,online, id in addresses%}
+        {% if online%}
+
+        <div class="card border-success mb-3 client">
+            <div class="card-header" style="text-align:center;">{{ip}}</div>
+            <div class="card-body">
+                <button type="button" onclick="redirectPage('{{ip}}','{{id}}')" class="btn btn-success">Online</button>
+
+            </div>
+        </div>
+
+        {%else%}
+
+        <div class="card border-danger mb-3 client">
+            <div class="card-header">{{ip}}</div>
+            <div class="card-body">
+                <button type="submit" onclick="redirectPage('{{ip}}','{{id}}')" class="btn btn-danger">Offline</button>
+            </div>
+        </div>
+
+        {%endif%}
+
+
+        {% endfor %}
+
+    </div>
+    {%endif%}
+
+    <!--1120-->
+    <div style="width: 200px"></div>
+
+
+</div>
+
+{%endblock%}
+

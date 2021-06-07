@@ -1,0 +1,58 @@
+{%extends "base.html"%}
+{%block title%}Login{%endblock%}
+
+{%block content%}
+
+
+
+<br/><br/><br/><br/>
+<center>
+    <img src={{url_for("static", filename="logo1.png" )}}>
+</center>
+<table class="table table-hover">
+  <thead>
+    <tr>
+      <th scope="col" style="text-align:center;font-size:50px">SpyShnap<br/></th>
+    </tr>
+</table>
+<div class="card border-primary mb-3" style="max-width: 30rem;margin:0 auto;">
+  <div class="card-body">
+      <form action="#" method="post">
+  <fieldset>
+    <legend>Login</legend>
+    {% if error_name != 1 %}
+    <div class="form-group">
+      <label for="exampleInputEmail1">Email</label>
+      <input type="email" class="form-control" name="email" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email">
+      <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+    </div>
+    {% else  %}
+      <div class="form-group has-danger">
+        <label for="exampleInputEmail1">Email</label>
+        <input type="email" name="email"  class="form-control is-invalid" onblur="closeError('emailError')" id="inputInvalid">
+        <div class="invalid-feedback" id="emailError">{{name_error_reason}}</div>
+      </div>
+    {% endif %}
+    {% if error_pass != 1 %}
+    <div class="form-group">
+      <label for="exampleInputPassword1">Password</label>
+      <input type="password" name="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
+    <small class="form-text text-muted"><a href="/recover">If you forgot your password click  Here</a>.</span></small>
+    </div>
+    {% else %}
+    <div class="form-group has-danger">
+        <label for="exampleInputPassword1">Password</label>
+        <input type="password" name="password" onblur="closeError('passwordError')" class="form-control is-invalid" id="inputInvalid2">
+        <div class="invalid-feedback" id="passwordError">{{pass_error_reason}}</div>
+      <small class="form-text text-muted"><a href="/recover">If you forgot your password click  Here</a>.</span></small>
+    </div>
+    {% endif %}
+
+    <button type="submit" class="btn btn-primary">Log In</button>
+    <button type="button" class="btn btn-primary btn-sm" onclick="document.location='signUp'" style="float:right">Sign Up</button>
+  </fieldset>
+    </form>
+  </div>
+</div>
+
+{%endblock%}

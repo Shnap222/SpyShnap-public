@@ -1,0 +1,46 @@
+{%extends "base_home.html"%}
+{%block title%}{{ip}}{%endblock%}
+
+{%block head%}
+<script type="text/javascript" src="{{ url_for('static',filename='scripts/image_options.js') }}"></script>
+{%endblock%}
+
+{%block content%}
+
+
+<div style="display: flex; justify-content: space-between">
+
+    <div class="card text-white bg-primary mb-3" style="margin-top: calc(100vh - 80vh); width: 20ch; display: inline-flex; max-height: 300px">
+        <div class="card-header"><h4 class="card-title"><u>Options</u></h4></div>
+
+        <button type="button" onclick="image_download('{{ip}}','{{id}}','{{image_name}}','{{type}}')"
+                style="display: block; margin-bottom: 10px; margin-top: 30px"
+                id="image_download"
+                class="btn btn-primary">Download
+        </button>
+
+
+        <button type="button" onclick="image_delete('{{ip}}','{{id}}','{{image_name}}','{{type}}')" style="display: block; margin-bottom: 30px "
+                id="delete_image_button"
+                class="btn btn-primary">Delete
+        </button>
+
+
+        <button type="button" onclick="back('{{ip}}','{{id}}')" style="display: block ; " id="back"
+                class="btn btn-primary">Return
+        </button>
+    </div>
+
+    <div id="image_container" style="height: calc(100vh - 104px);width: 100vh; text-align: center">
+        <br>
+        <h1><u>{{image_represent}}</u></h1>
+        <img src={{url_for('download_file', client=ip+","+id ,filename=image_name,type=type ) }}
+             style="max-width: 100%;max-height: 100%;object-fit: fill ; margin-top: calc(100vh - 90vh); ">
+    </div>
+
+
+    <div style="width: 20ch"></div>
+
+</div>
+
+{%endblock%}

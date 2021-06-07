@@ -1,0 +1,23 @@
+
+.right
+{
+    float: right;
+}
+
+label{
+ color: #000000 !important;
+ display: inline-block;
+ width: 70px;
+ text-align: left;
+ }
+
+.bg-white{
+ background-color: #fff !important
+ }
+
+input {
+    /* Other styling... */
+   width: 50% !important;
+   display: inline !important;
+   margin-left: 30px !important;
+}
